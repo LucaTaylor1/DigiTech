@@ -1,4 +1,4 @@
-import sys
+import sys, easygui
 
 Monsters = {"Stoneling" :
             { "Strength" : "7" ,
@@ -53,95 +53,59 @@ Monsters = {"Stoneling" :
             }
 
 Restart = 1
+easygui.msgbox("Welcome to the Monster Card Index!")
 while Restart == 1:
-
-    print("----------------------------\n\nHere are the monster cards you hold:")
-    for Monsters_id, Monsters_info in Monsters.items():
-                print (f"----------\n{Monsters_id}")
-                for key, value in Monsters_info.items():
-                    print(f"{key}: {value}")
-
-    Monster_swap = input("----------\n\nWould you like to swap a monster card for your own? Y/N: ").lower()
-    if Monster_swap == ("Y").lower():
-        Monster_name = input("What monster card would you like to replace? ")
-        id_value = Monsters[Monster_name]
-        print (f"----------\n{Monster_name}")
-        for key, value in id_value.items():
-                    print(f"{key}: {value}")
-    else:
-        print("Ok")
+    menu = easygui.buttonbox("What would you like to do today?", title=["Monster Card Index"], choices=["View Cards", "Edit/Delete Cards", "Add New Card", "Exit"])
+    if menu == "Exit":
+        easygui.msgbox("Very Well.")
         sys.exit()
-
-    token = 1
-
-    New_card = input("----------\nWhat name would you like for your new monster? ")
-    print("\nThe following values can only be between 1 and 25!")
-    while token == 1:
-        New_strength = input("\nHow strong do you want your card to be? ")
-        New_speed = input("How fast do you want your card to be? ")
-        New_stealth = input("How stealthy do you want your card to be? ")
-        New_cunning = input("How cunning do you want your card to be? ")
-
-        stats = [int(New_strength), int(New_speed), int(New_stealth), int(New_cunning)]
-
-        if any(stat < 1 or stat > 25 for stat in stats):
-            print("\nPlease redo, one of your stats are invalid:\n")
-        else:
-            print("\nHere is your new card!")
-            token + 100
-            break
-
-    Monsters[New_card] = Monsters[Monster_name]
-    del Monsters[Monster_name]
-    Monsters[New_card]["Strength"] = New_strength
-    Monsters[New_card]["Speed"] = New_speed
-    Monsters[New_card]["Stealth"] = New_stealth
-    Monsters[New_card]["Cunning"] = New_cunning
-
-    print(f"\n----------\n{New_card}")
-    for key, value in Monsters[New_card].items():
-        print(f"{key}: {value}")
-
-    validation = input("----------\n\nAny changes to your card? Y/N: ")
-
-    if validation == ("N").lower():
-        print("\n\n\nHere is your monster card:")
         
-    else:
-        Strengthchange = input("\nWould you like to change it's strength? ")
-        if Strengthchange == ("Y").lower():
-            New_strength2 = input("What is your new strength? ")
-            Monsters[New_card]["Strength"] = New_strength2
-            
-        Speedchange = input("\nWould you like to change it's speed? ")
-        if Speedchange == ("Y").lower():
-            New_speed2 = input("What is your new speed? ")
-            Monsters[New_card]["Speed"] = New_speed2
-            
-        Stealthchange = input("\nWould you like to change it's stealth? ")
-        if Stealthchange == ("Y").lower():
-            New_stealth2 = input("What is your new stealth? ")
-            Monsters[New_card]["Stealth"] = New_stealth2
-            
-        Cunningchange = input("\nWould you like to change it's cunning? ")
-        if Cunningchange == ("Y").lower():
-            New_cunning2 = input("What is your new cunning? ")
-            Monsters[New_card]["Cunning"] = New_cunning2
-        print("\n\n\nHere is your monster card:")
+    elif menu == "View Cards":
+        while True == 1:
+            monster_names = list(Monsters.keys())
+            chosenmonster = easygui.choicebox("Choose what monster you'd like to view:", title=["Monster Selection"], choices=monster_names)
+            if chosenmonster == None:
+                break
+            id_value = Monsters[chosenmonster]
+            message = f"{chosenmonster}\n" + "-" * len(chosenmonster) + "\n"
+            for stat, value in id_value.items():
+                message += f"{stat}: {value}\n"
+            viewchoice = easygui.buttonbox(message + "----------", choices=["Return", "Menu"])
+            if viewchoice == ("Menu"):
+                    break
+                    
+    elif menu == "Edit/Delete Cards":
+        while True:
+            monster_names = list(Monsters.keys())
+            chosenmonster = easygui.choicebox("What Monster would you like to edit?", title=["Monster Editing"], choices=monster_names)
+            if chosenmonster == None:
+                break
+            id_value = Monsters[chosenmonster]
+            choice2 = easygui.buttonbox("Would you like to edit or delete " + chosenmonster + "?", choices=["Edit", "Delete"])
+            if choice2 == "Delete":
+                removed_monster = Monsters.pop(chosenmonster)
+                easygui.msgbox("The card " + chosenmonster + " has been deleted.")
+                break
+            if choice2 == "Edit":
+                id_value = Monsters[chosenmonster]
+                message = f"{chosenmonster}\n" + "-" * len(chosenmonster) + "\n"
+                for stat, value in id_value.items():
+                    message += f"{stat}: {value}\n"
+                editchoice = easygui.buttonbox(message + "----------\nWhat value would you like to change?", choices=["Strength", "Speed", "Stealth", "Cunning", "Cancel"])
+                if editchoice == "Cancel":
+                    break
+                
+                Newvalue = easygui.enterbox("Please enter what value you would like to change for " + editchoice + ":\nValues 1 - 25")
+                if Newvalue == None:
+                    break
+                Monsters[chosenmonster][editchoice] = Newvalue
+                easygui.msgbox(f"{editchoice} has been updated to {Newvalue} for {chosenmonster}.")
 
-    print(f"----------\n{New_card}")
-    for key, value in Monsters[New_card].items():
-        print(f"{key}: {value}")
-    print("----------")
-
-    Restart1 = input("\nWould you like to redo? ")
-    if Restart1 == ("Y").lower():
-        Restart = 1
-    elif Restart1 == ("N").lower():
-        Restart = 0
-
+    elif menu == "Add New Card":
+        while True:
                  
     
+
 
 
 
