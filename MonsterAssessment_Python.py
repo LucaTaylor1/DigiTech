@@ -1,65 +1,40 @@
 import sys, easygui
 
+#This is the monster dictionary, where all the monster stats are stored for viewing, editing, or deleting.
 Monsters = {"Stoneling" :
-            { "Strength" : "7" ,
-                "Speed" : "1" ,
-                "Stealth" : "25" ,
-                "Cunning" : "15"},
+            { "Strength" : "7" , "Speed" : "1" , "Stealth" : "25" , "Cunning" : "15"},
             "Vexscream" :
-            { "Strength" : "1" ,
-                "Speed" : "6" ,
-                "Stealth" : "21" ,
-                "Cunning" : "19"},
+            { "Strength" : "1" , "Speed" : "6" , "Stealth" : "21" , "Cunning" : "19"},
             "Dawnmirage" :
-            { "Strength" : "5" ,
-                "Speed" : "15" ,
-                "Stealth" : "18" ,
-                "Cunning" : "22"},
+            { "Strength" : "5" , "Speed" : "15" , "Stealth" : "18" , "Cunning" : "22"},
             "Blazegolem" :
-            { "Strength" : "15" ,
-                "Speed" : "20" ,
-                "Stealth" : "23" ,
-                "Cunning" : "6"},
+            { "Strength" : "15" , "Speed" : "20" , "Stealth" : "23" , "Cunning" : "6"},
             "Websnake" :
-            { "Strength" : "7" ,
-                "Speed" : "15" ,
-                "Stealth" : "10" ,
-                "Cunning" : "5"},
+            { "Strength" : "7" , "Speed" : "15" , "Stealth" : "10" , "Cunning" : "5"},
             "Moldvine" :
-            { "Strength" : "21" ,
-                "Speed" : "18" ,
-                "Stealth" : "14" ,
-                "Cunning" : "5"},
+            { "Strength" : "21" , "Speed" : "18" , "Stealth" : "14" , "Cunning" : "5"},
             "Vortexwing" :
-            { "Strength" : "19" ,
-                "Speed" : "13" ,
-                "Stealth" : "19" ,
-                "Cunning" : "2"},
+            { "Strength" : "19" , "Speed" : "13" , "Stealth" : "19" , "Cunning" : "2"},
             "Rotthing" :
-            { "Strength" : "16" ,
-                "Speed" : "7" ,
-                "Stealth" : "4" ,
-                "Cunning" : "12"},
+            { "Strength" : "16" , "Speed" : "7" , "Stealth" : "4" , "Cunning" : "12"},
             "Froststep" :
-            { "Strength" : "14" ,
-                "Speed" : "14" ,
-                "Stealth" : "17" ,
-                "Cunning" : "4"},
+            { "Strength" : "14" , "Speed" : "14" , "Stealth" : "17" , "Cunning" : "4"},
             "Wispghoul" :
-            { "Strength" : "17" ,
-                "Speed" : "19" ,
-                "Stealth" : "3" ,
-                "Cunning" : "2"},
+            { "Strength" : "17" , "Speed" : "19" ,"Stealth" : "3" , "Cunning" : "2"},
             }
 
+#Main menu.
 Restart = 1
 easygui.msgbox("Welcome to the Monster Card Index!", title=["Monster Card Index"])
 while Restart == 1:
     menu = easygui.buttonbox("What would you like to do today?", title=["Monster Card Index"], choices=["View Cards", "Edit/Delete Cards", "Add New Card", "Exit"])
+
+    #If the user wants to quit.
     if menu == "Exit":
         easygui.msgbox("Very Well. Goodbye.", title=["Farewell"])
         sys.exit()
-        
+
+    #If the user wants the view the cards they hold.      
     elif menu == "View Cards":
         while True:
             monster_names = list(Monsters.keys())
@@ -73,7 +48,8 @@ while Restart == 1:
             viewchoice = easygui.buttonbox(message + "----------", title=[chosenmonster], choices=["Return", "Menu"])
             if viewchoice == ("Menu"):
                     break
-                    
+
+    #If the user wants to edit or delete one of their cards.
     elif menu == "Edit/Delete Cards":
         while True:
             monster_names = list(Monsters.keys())
@@ -82,6 +58,8 @@ while Restart == 1:
                 break
             id_value = Monsters[chosenmonster]
             choice2 = easygui.buttonbox("Would you like to edit or delete " + chosenmonster + "?", title=["Edit or Delete " + chosenmonster], choices=["Edit", "Delete", "Cancel"])
+
+            #This is the delete code where they the verify if they want to delete their selected monster.
             if choice2 == "Delete":
                 confirmation = easygui.buttonbox("Are you certain you want to delete " + chosenmonster + "?", title=["Confirmation"], choices=["Yes", "No"])
                 if confirmation == "No":
@@ -90,6 +68,8 @@ while Restart == 1:
                     removed_monster = Monsters.pop(chosenmonster)
                     easygui.msgbox("The card " + chosenmonster + " has been deleted.", title=[chosenmonster + "'s deletion"])
                     break
+
+            #This is the editing code where they may change the stats of their selected monster.
             if choice2 == "Edit":
                 id_value = Monsters[chosenmonster]
                 message = f"{chosenmonster}\n" + "-" * len(chosenmonster) + "\n"
@@ -107,10 +87,12 @@ while Restart == 1:
             if choice2 == "Cancel":
                 break
 
+    #If the user wants to create a monster card of their own, they may use this code.
     elif menu == "Add New Card":
         while True:
             card_name = easygui.enterbox("What would you like to name your new card?", title=["New card name"])
 
+            #If any of their inputs are invalid, it will break and retry until the user stops or completes it successfully.
             if card_name == None:
                 break
             elif card_name.strip() == "":
@@ -119,6 +101,8 @@ while Restart == 1:
                 easygui.msgbox("The monster " + card_name + " already exists!", title=["Error"])
                 continue
             else:
+
+                #This is where the user may select the stats for their card. The code past this helps implement it into the dictionary.
                 msg = "What stats would you like for " + card_name + "?"
                 title = card_name + "s' Stats"
                 Stats = ["Strength", "Speed", "Stealth", "Cunning"]
@@ -140,6 +124,7 @@ while Restart == 1:
                 ste = int(stealth)
                 cun = int(cunning)
 
+                #The code here makes sure the users stat inputs remain inbetween 1 and 25.
                 if str <= 0 or str >= 26:
                     easygui.msgbox("Keep Strength between 1 and 25!", title=["Error"])
                     continue
@@ -159,5 +144,6 @@ while Restart == 1:
                 Monsters[card_name] = {"Strength" : statstest[0], "Speed" : statstest[1],
                                        "Stealth" : statstest[2], "Cunning" : statstest[3]}
                 
+                #A notice so the user knows that their card was successfully created and can now be viewed, edited, or deleted in the main menu.
                 easygui.msgbox("The card " + card_name + " has been successfully added!", title=[card_name + " created"])
                 break
