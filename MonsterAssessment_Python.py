@@ -27,7 +27,7 @@ Monsters = {"Stoneling" :
 Restart = 1
 easygui.msgbox("Welcome to the Monster Card Index!", title=["Monster Card Index"])
 while Restart == 1:
-    menu = easygui.buttonbox("What would you like to do today?", title=["Monster Card Index"], choices=["View Cards", "Edit/Delete Cards", "Add New Card", "Exit"])
+    menu = easygui.buttonbox("What would you like to do today?", title=["Monster Card Index"], choices=["View Cards", "Edit/Delete Cards", "Add New Card", "Exit", "Print Cards"])
 
     #If the user wants to quit.
     if menu == "Exit":
@@ -82,6 +82,19 @@ while Restart == 1:
                 Newvalue = easygui.enterbox("Please enter what value you would like to change for " + editchoice + ":\nValues 1 - 25", title=[editchoice + " Editing"])
                 if Newvalue == None:
                     break
+
+                if Newvalue.isdigit():
+                    num = int(Newvalue)
+                else:
+                    easygui.msgbox("Please only numbers")
+                    continue
+                
+                if int(Newvalue) <= 0 or int(Newvalue) >= 26:
+                    easygui.msgbox("No")
+                    continue
+                else:
+                    easygui.msgbox
+                
                 Monsters[chosenmonster][editchoice] = Newvalue
                 easygui.msgbox(f"{editchoice} has been updated to {Newvalue} for {chosenmonster}.", title=["Edit confirmed"])
             if choice2 == "Cancel":
@@ -103,7 +116,7 @@ while Restart == 1:
             else:
 
                 #This is where the user may select the stats for their card. The code past this helps implement it into the dictionary.
-                msg = "What stats would you like for " + card_name + "?"
+                msg = "What stats would you like for " + card_name + "?\nMust be between 1 and 25!"
                 title = card_name + "s' Stats"
                 Stats = ["Strength", "Speed", "Stealth", "Cunning"]
                 statstest = easygui.multenterbox(msg, title, Stats)
@@ -145,5 +158,18 @@ while Restart == 1:
                                        "Stealth" : statstest[2], "Cunning" : statstest[3]}
                 
                 #A notice so the user knows that their card was successfully created and can now be viewed, edited, or deleted in the main menu.
-                easygui.msgbox("The card " + card_name + " has been successfully added!", title=[card_name + " created"])
+                id_value = Monsters[card_name]
+                message2 = f"{card_name}\n" + "-" * len(card_name) + "\n"
+                for stat, value in id_value.items():
+                    message2 += f"{stat}: {value}\n"
+                easygui.msgbox("The card " + card_name + " has been successfully added!\n\n" + message2 + "---", title=[card_name + " created"])
                 break
+
+    #The code to print all cards held into the shell
+    elif menu == "Print Cards":
+        print("----------------------------\n\nHere are the monster cards you hold:")
+        for Monsters_id, Monsters_info in Monsters.items():
+            print (f"----------\n{Monsters_id}")
+            for key, value in Monsters_info.items():
+                print(f"{key}: {value}")
+        easygui.msgbox("All current cards held have been printed", title=["Print"])
